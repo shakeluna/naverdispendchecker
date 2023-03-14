@@ -16,7 +16,6 @@ def dataframeget(orderid,naverid):
     data = response.json()    
     # Convert the JSON object to a Pandas DataFrame
     f = pd.DataFrame(data)
-    f['ProductOrderNum'] = f['ProductOrderNum'].astype(str)
     df = f.rename(columns={'ProductOrderNum': '네이버주문번호', 'Code': '코드', 'Productname': '상품이름', 'Sent_to': '송신한 네이버 아이디'})    
     return df
 
