@@ -3,21 +3,46 @@ import pandas as pd
 import requests
 
 # Define the function to handle the button click
-def dataframeget(orderid,naverid):
-    # Make the API request with the input values    
-    response = requests.get('https://x8ki-letl-twmt.n7.xano.io/api:ymIW3Ap0/userview', params={'ProductOrderNum': orderid, 'Sent_to': naverid.lower()})
+def fetch_data(orderid, naverid):
+    # Define the API endpoint
+    url = 'https://script.google.com/macros/s/AKfycbzLaZvxl_PjyJKLgAPkCxHjh-Yj1M_9jqyj9RcYeR4mnr7W7By0T8ZsTm7XWilaispW1Q/exec'
+    
+    # Set the parameters for the GET request
+    params = {'naverid': naverid, 'orderid': orderid}
+    
+    # Make the GET request
+    response = requests.get(url, params=params)
     
     # Check if the response was successful
-    if response.status_code != 200:
-        print('에러가 발생했습니다. 톡톡으로 문의해주시기 바랍니다.')
-        return
-    
-    # Convert the response to a JSON object
-    data = response.json()    
-    # Convert the JSON object to a Pandas DataFrame
-    f = pd.DataFrame(data)
-    df = f.rename(columns={'ProductOrderNum': '네이버주문번호', 'Code': '코드', 'Productname': '상품이름', 'Sent_to': '송신한 네이버 아이디'})    
-    return df
+    if response.status_code == 200:
+        try:
+            # Parse the JSON response
+            data = response.json()
+
+            # If the API returns a list directly, we can create the DataFrame from it
+            if isinstance(data, list):
+                df = pd.DataFrame(data)
+            # If the API returns a dictionary, check for a specific key (e.g., 'data') that contains the list
+            elif 'data' in data:
+                df = pd.DataFrame(data['data'])
+            else:
+                print("Unexpected JSON structure:", data)
+                return None
+            
+            # Optionally, rename columns to match desired DataFrame structure
+            df.rename(columns={
+                'ProductOrderNum': '네이버주문번호',
+                'Code': '코드',
+                'Productname': '상품이름',
+                'Sent_to': '송신한 네이버 아이디',
+                'sent_date': '발송일'
+            }, inplace=True)
+            
+            return df
+        except ValueError as e:
+            print("Error processing JSON response:", e)
+    else:
+        print(f"Failed to fetch data, HTTP status code: {response.status_code}")
 
 st.title('키를 찾으세요')
 st.header('발송된 키를 이력을 확인할 수 있습니다.')
@@ -32,7 +57,7 @@ if st.button("검색"):
     st.write("네이버아이디: " + naverid + " 주문번호: " + orderid + " 에 대한 배송여부확인결과입니다.")    
     naverid = naverid.title()
     orderid = orderid.title()
-    df = dataframeget(orderid,naverid)
+    df = fetch_data(orderid,naverid)
     try:
         if len(df) == 0:
             st.write('검색된 배송 데이터가 없습니다. 문의 바랍니다.')
