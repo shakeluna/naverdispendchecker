@@ -57,7 +57,8 @@ if st.button("검색"):
     st.write("네이버아이디: " + naverid + " 주문번호: " + orderid + " 에 대한 배송여부확인결과입니다.")    
     naverid = naverid.title()
     orderid = orderid.title()
-    df = fetch_data(orderid,naverid)
+    orderidint = int(orderid)
+    df = fetch_data(orderidint,naverid)
     try:
         if len(df) == 0:
             st.write('검색된 배송 데이터가 없습니다. 문의 바랍니다.')
