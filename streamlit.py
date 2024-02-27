@@ -54,24 +54,24 @@ naverid = st.text_input("주문하신 네이버아이디를 입력하세요", "�
 orderid = st.text_input("주문번호를 입력하세요. 숫자만 입력하세요.", "예시:1234")
 
 if st.button("검색"):
-try:
-    st.write("네이버아이디: " + naverid + " 주문번호: " + orderid + " 에 대한 배송여부확인결과입니다.")    
-    df = fetch_data(orderid, naverid)
-    if df is not None and not df.empty:
-        # CSS to inject contained in a string
-        hide_table_row_index = """
-                    <style>
-                    thead tr th:first-child {display:none}
-                    tbody th {display:none}
-                    </style>
-                    """
-        # Inject CSS with Markdown
-        st.markdown(hide_table_row_index, unsafe_allow_html=True)
-        
-        # Display a static table
-        st.table(df)
-    else:
-        st.write('검색된 배송 데이터가 없습니다. 문의 바랍니다.')
-
-except:
-        st.write("에러가 발생했습니다.")
+    try:
+        st.write("네이버아이디: " + naverid + " 주문번호: " + orderid + " 에 대한 배송여부확인결과입니다.")    
+        df = fetch_data(orderid, naverid)
+        if df is not None and not df.empty:
+            # CSS to inject contained in a string
+            hide_table_row_index = """
+                        <style>
+                        thead tr th:first-child {display:none}
+                        tbody th {display:none}
+                        </style>
+                        """
+            # Inject CSS with Markdown
+            st.markdown(hide_table_row_index, unsafe_allow_html=True)
+            
+            # Display a static table
+            st.table(df)
+        else:
+            st.write('검색된 배송 데이터가 없습니다. 문의 바랍니다.')
+    
+    except:
+            st.write("에러가 발생했습니다.")
