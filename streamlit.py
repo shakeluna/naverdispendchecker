@@ -57,6 +57,8 @@ if st.button("검색"):
     try:
         st.write("네이버아이디: " + naverid + " 주문번호: " + orderid + " 에 대한 배송여부확인결과입니다.")    
         df = fetch_data(orderid, naverid)
+        st.write("DF length = "str(len(df)))
+        
         if df is not None and not df.empty:
             # CSS to inject contained in a string
             hide_table_row_index = """
