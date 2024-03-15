@@ -34,7 +34,7 @@ def fetch_data(orderid, naverid):
                 'ProductOrderNum': '네이버주문번호',
                 'Code': '코드',
                 'Productname': '상품이름',
-                'Sent_to': '송신한 네이버 아이디',
+                'Sent_to': '송신한 전화번호',
                 'sent_date': '발송일'
             }, inplace=True)
             
@@ -46,16 +46,16 @@ def fetch_data(orderid, naverid):
 
 st.title('키를 찾으세요')
 st.header('발송된 키를 이력을 확인할 수 있습니다.')
-st.subheader('네이버아이디와 주문번호를 입력해보세요. 관련 정보가 나옵니다.')
+st.subheader('주문하신 전화번호와 주문번호를 입력해보세요. 관련 정보가 나옵니다.')
 
 # Text Input
-naverid = st.text_input("주문하신 네이버아이디를 입력하세요", "예시:aaaa")
+naverid = st.text_input("앞자리 0은 빼고, 숫자만 입력하세요.", "예시: 01012345678인경우, 1012345678")
 # Text Input
-orderid = st.text_input("주문번호를 입력하세요. 숫자만 입력하세요.", "예시:1234")
+orderid = st.text_input("주문번호를 입력하세요. 숫자만 입력하세요.", "예시: 12345678인 경우, 12345678")
 
 if st.button("검색"):
     try:
-        st.write("네이버아이디: " + naverid + " 주문번호: " + orderid + " 에 대한 배송여부확인결과입니다.")    
+        st.write("전화번호: " + "0"+ naverid + " 주문번호: " + orderid + " 에 대한 배송여부확인결과입니다.")    
         df = fetch_data(orderid, naverid)        
         if df is not None and not df.empty:
             # CSS to inject contained in a string
